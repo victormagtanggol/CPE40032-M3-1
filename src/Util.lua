@@ -122,3 +122,56 @@ function GenerateQuadsBalls(atlas)
 
     return quads
 end
+
+-- create functions below pertaining to the creation of quads for the locked bricked,
+-- table for powerups, and other functions to make both appear while playing
+function GenerateQuadlockedBrick(atlas)
+    return table.slice(GenerateQuads(atlas, 32, 16), 24, 25)
+end
+
+function GenerateQuadsPowerup(atlas)
+    return table.slice(GenerateQuads(atlas, 16, 16), 153, 154)
+end
+
+function addBall(currentBall)
+    local newBall = Ball()
+
+    newBall.skin = math.random(7)
+    newBall.x = currentBall.x
+    newBall.y = currentBall.y
+    newBall.dx = math.random(-200, 200)
+    newBall.dy = math.random(-50, -60)
+
+    return newBall
+end
+
+--M3: Functions to spawn powerups for PlayState.
+function addKey()
+    local powerup = PowerUp()
+    powerup.type = 'key'
+    powerup:setSkin()
+    return powerup
+end
+
+function spawnBallPowerup()
+    local powerup = PowerUp()
+    powerup.type = 'ball'
+    powerup:setSkin()
+    return powerup
+end
+
+function spawnKeyPowerup()
+    local powerup = PowerUp()
+    powerup.type = 'key'
+    powerup:setSkin()
+    return powerup
+end
+
+function lockedBrickExists(bricks)
+    for b, brick in pairs(bricks) do
+        if bricks[b].locked == true then
+            return true
+        end
+    end
+    return false
+end

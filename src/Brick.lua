@@ -60,6 +60,9 @@ function Brick:init(x, y)
     -- used to determine whether this brick should be rendered
     self.inPlay = true
 
+    -- locked brick attribute
+    self.locked = math.random(1, 20) == 1 and true or false
+
     -- particle system belonging to the brick, emitted on hit
     self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 64)
 
@@ -82,6 +85,12 @@ end
     changing its color otherwise.
 ]]
 function Brick:hit()
+
+    -- if bricked is locked
+    if self.locked == true then
+        return
+    end
+    
     -- set the particle system to interpolate between two colors; in this case, we give
     -- it our self.color but with varying alpha; brighter for higher tiers, fading to 0
     -- over the particle's lifetime (the second color)
@@ -132,11 +141,16 @@ end
 
 function Brick:render()
     if self.inPlay then
-        love.graphics.draw(gTextures['main'],
+        if self.locked == true then
+        -- place code below to an else clause, then make an if clause to draw locked brick
+        love.graphics.draw(gTextures['main'], gFrames['brickLocked'][1], self.x, self.y)
+        else
+            love.graphics.draw(gTextures['main'],
             -- multiply color by 4 (-1) to get our color offset, then add tier to that
             -- to draw the correct tier and color brick onto the screen
             gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
             self.x, self.y)
+        end
     end
 end
 

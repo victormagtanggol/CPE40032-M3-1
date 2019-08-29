@@ -50,10 +50,12 @@ function love.load()
     -- load up the graphics we'll be using throughout our states
     gTextures = {
         ['background'] = love.graphics.newImage('graphics/background.png'),
-        ['main'] = love.graphics.newImage('graphics/Arkanoid.png'),
+        ['main'] = love.graphics.newImage('graphics/arkanoid.png'),
         ['arrows'] = love.graphics.newImage('graphics/arrows.png'),
         ['hearts'] = love.graphics.newImage('graphics/hearts.png'),
-        ['particle'] = love.graphics.newImage('graphics/particle.png')
+        ['particle'] = love.graphics.newImage('graphics/particle.png'),
+        -- key texture here
+        ['key'] = love.graphics.newImage('graphics/key.png')
     }
 
     -- Quads we will generate for all of our textures; Quads allow us
@@ -63,7 +65,10 @@ function love.load()
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main']),
-        ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9)
+        ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
+        -- below is quads for powerups and the locked brick
+        ['powerUp'] = GenerateQuadsPowerup(gTextures['main']),
+        ['brickLocked'] = GenerateQuadlockedBrick(gTextures['main'])
     }
 
     -- initialize our virtual resolution, which will be rendered within our
@@ -91,7 +96,9 @@ function love.load()
         ['high-score'] = love.audio.newSource('sounds/high_score.wav'),
         ['pause'] = love.audio.newSource('sounds/pause.wav'),
 
-        ['music'] = love.audio.newSource('sounds/music.wav')
+        ['music'] = love.audio.newSource('sounds/music.wav'),
+        -- powerup get here
+        ['powerup'] = love.audio.newSource('sounds/powerup.mp3')
     }
 
     -- the state machine we'll be using to transition between various states
@@ -277,6 +284,19 @@ function renderHealth(health)
     for i = 1, 3 - health do
         love.graphics.draw(gTextures['hearts'], gFrames['hearts'][2], healthX, 4)
         healthX = healthX + 11
+    end
+end
+
+-- function to display key icon below
+function renderKey(keys)
+    -- start of our health rendering
+    local keyX = VIRTUAL_WIDTH - 140
+    local keyHeight = gTextures['key']:getHeight() 
+    local keyWidth = gTextures['key']:getWidth()
+    -- render health left
+    for i = 1, keys do
+        love.graphics.draw(gTextures['key'], keyX, 4 )
+        keyX = keyX + 11
     end
 end
 
